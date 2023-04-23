@@ -1,0 +1,84 @@
+
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+
+<head>
+  <link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
+  <meta charset="UTF-8">
+  <title>리스트</title>
+</head>
+
+<style>
+
+
+.table {
+  margin-top : 60px;
+}
+
+.bottom {
+  margin-top : 50px;
+}
+a{
+
+     color: black;
+}
+
+
+</style>
+
+
+<body>
+<div class="p-3 mb-2 bg-light text-dark">
+  <header>
+    <h1> project </h1>
+  </header>
+</div>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/board/list">Home</a>
+        </li>
+      </ul>
+      <form class="d-flex" th:action="@{/board/list}" method="get" role="search">
+        <input class="form-control me-2" type="text" name="searchKeyword" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</nav>
+
+
+<div class="container my-3">
+  <table class="table">
+    <thead class="table-dark">
+    <tr>
+      <th>글번호</th>
+      <th>제목</th>
+      <th>작성일시</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="board : ${list}">
+      <td th:text="${board.id}"></td>
+      <td>
+        <a th:text="${board.title}" th:href="@{/board/view(id=${board.id})}"></a>
+      </td>
+      <td th:text="${#temporals.format(board.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+    </tr>
+    </tbody>
+  </table>
+  <div class = "bottom">
+  <a th:href="@{/board/write}" class="btn btn-outline-success" >글 등록하기</a>
+
+  <th:block th:each="page: ${#numbers.sequence(startPage, endPage)}">
+    <a th:if = "${page != nowPage}" th:href="@{/board/list(page = ${page - 1}, searchKeyword=${param.searchKeyword})}" th:text="${page}"></a>
+    <strong th:if = "${page == nowPage}" th:text="${page}" style="color : green"></strong>
+  </th:block>
+  </div>
+</div>
+</body>
+</html>
